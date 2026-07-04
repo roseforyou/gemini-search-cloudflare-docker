@@ -1,0 +1,7 @@
+name = "gemini-search-worker"
+main = "src/index.ts"
+compatibility_date = "2026-07-04"
+
+# Configure Browser Rendering in your Cloudflare account before deployment.
+# The binding name must match env.BROWSER in src/index.ts.
+browser = { binding = "BROWSER" }

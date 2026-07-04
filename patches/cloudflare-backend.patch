@@ -1,0 +1,39 @@
+diff --git a/gemini_search/server.py b/gemini_search/server.py
+--- a/gemini_search/server.py
++++ b/gemini_search/server.py
+@@
+-from .engine import AIModeEngine
++from .backends import create_engine
+@@
+-engine = AIModeEngine()
++engine = create_engine()
+@@
+-    browser_backend = app.state.config["browser_backend"]
+-    browser_desc = args.cdp_url or f"{browser_backend}/{args.channel} (headless={not args.no_headless})"
+-    print(f"  Browser: {browser_desc}")
++    engine_backend = os.environ.get("GEMINI_SEARCH_BACKEND", "local")
++    if engine_backend.lower() in {"cloudflare", "remote", "worker"}:
++        print(f"  Backend: cloudflare ({os.environ.get('GEMINI_SEARCH_REMOTE_URL', 'GEMINI_SEARCH_REMOTE_URL not set')})")
++    else:
++        browser_backend = app.state.config["browser_backend"]
++        browser_desc = args.cdp_url or f"{browser_backend}/{args.channel} (headless={not args.no_headless})"
++        print(f"  Browser: {browser_desc}")
+diff --git a/gemini_search_mcp/__init__.py b/gemini_search_mcp/__init__.py
+--- a/gemini_search_mcp/__init__.py
++++ b/gemini_search_mcp/__init__.py
+@@
+-from typing import Optional
+ from mcp.server.fastmcp import FastMCP
+ from mcp.types import ToolAnnotations
+ 
+-from gemini_search.engine import AIModeEngine
++from gemini_search.backends import create_engine
+@@
+-_engine: Optional[AIModeEngine] = None
++_engine = None
+@@
+-async def _get_engine() -> AIModeEngine:
++async def _get_engine():
+@@
+-                _engine = AIModeEngine()
++                _engine = create_engine()

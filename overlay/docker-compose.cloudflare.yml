@@ -1,0 +1,13 @@
+services:
+  gemini-search:
+    build:
+      context: .
+      dockerfile: Dockerfile.cloudflare
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEMINI_SEARCH_BACKEND=cloudflare
+      - GEMINI_SEARCH_REMOTE_URL=${GEMINI_SEARCH_REMOTE_URL}
+      - GEMINI_SEARCH_REMOTE_TOKEN=${GEMINI_SEARCH_REMOTE_TOKEN}
